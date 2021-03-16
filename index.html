@@ -1,0 +1,179 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Makeup Lab</title>
+</head>
+<body>
+    <main>
+        <h1>Makeup lab</h1>
+        <button id="prompt">Press me!</button>
+        <p id="result"></p>
+        <hr><br>
+        <button id="console-log">console.log</button>
+        <button id="console-error">console.error</button>
+        <button id="console-table">console.table</button>
+        <button id="console-dir">console.dir</button>
+        <button id="console-dirxml">console.dirxml</button>
+        <button id="console-group-start">console.group start</button>
+        <button id="console-group-end">console.group end</button>
+        <button id="console-time-start">console.time start</button>
+        <button id="console-time-end">console.time end</button>
+        <button id="console-trace">console.trace</button>
+    </main>
+    <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+    <script>
+        window.TrackJS && TrackJS.install({ 
+            token: "7fbc42a9ee184bd99f368457681eb54d"
+            // for more configuration options, see https://docs.trackjs.com
+        });
+
+        let User = {
+            name: "",
+            age: 0,
+            birthMonth: 0,
+            birthDay: 0,
+            birthYear: 0,
+        }
+
+        let getBirthMonth = (month) => {
+            switch (month) {
+                case "January":
+                    return 1;
+                case "February":
+                    return 2;
+                case "March":
+                    return 3;
+                case "April":
+                    return 4;
+                case "May":
+                    return 5;
+                case "June":
+                    return 6;
+                case "July":
+                    return 7;
+                case "August":
+                    return 8;
+                case "September":
+                    return 9;
+                case "October":
+                    return 10;
+                case "November":
+                    return 11;
+                case "December":
+                    return 12;
+                default:
+                    return 0;
+            }
+        }
+
+        class NonnumericInputError extends Error {
+            constructor(message) {
+                super(message);
+                this.name = "NonnumericInputError";
+            }
+        }
+
+        class InvalidBirthMonthError extends Error {
+            constructor(message) {
+                super(message);
+                this.name = "InvalidBirthMonthError";
+            }
+        }
+
+        document.getElementById("prompt").addEventListener("click", () => {
+            let name = window.prompt("What is your name?");
+            User.name = name;
+            let age = window.prompt("How old are you?");
+            try {
+                if (isNaN(parseInt(age))) throw new NonnumericInputError("Error: invalid age!");
+                User.age = parseInt(age);
+            } catch (err) {
+                alert(err.message);
+                TrackJS.track('A user entered an invalid age.');
+            } finally {
+                console.log("Recorded age.");
+            }
+            let birthMonth = window.prompt("What month were you born? (e.g. 'March')");
+            try {
+                if (getBirthMonth(birthMonth) == 0) throw new InvalidBirthMonthError("Error: invalid birth month");
+                User.birthMonth = getBirthMonth(birthMonth);
+            } catch (err) {
+                alert(err.message);
+                TrackJS.track('A user entered an invalid birth month.');
+            } finally {
+                console.log("Recorded birth month.")
+            }
+            let birthDay = window.prompt("What day were you born? (e.g. '24')");
+            try {
+                if (isNaN(parseInt(birthDay))) throw new NonnumericInputError("Error: invalid birth day!");
+                User.birthDay = parseInt(birthDay);
+            } catch (err) {
+                alert(err.message);
+                TrackJS.track('A user entered an invalid birthday.');
+            } finally {
+                console.log("Recorded birth day.");
+            }
+            let birthYear = window.prompt("What year were you born? (e.g. '2001')");
+            try {
+                if (isNaN(parseInt(birthYear))) throw new NonnumericInputError("Error: invalid birth year!");
+                User.birthYear = parseInt(birthYear);
+            } catch (err) {
+                alert(err.message);
+                TrackJS.track('A user entered an invalid birth year.');
+            } finally {
+                console.log("Recorded birth year.");
+            }
+            document.getElementById("result").innerHTML = `Your name is ${User.name}, you are ${User.age} years old, and you were born on ${User.birthMonth}/${User.birthDay}/${User.birthYear}.` 
+        });
+
+        document.getElementById("console-log").addEventListener("click", () => {
+            console.log(`Your name is ${User.name}, you are ${User.age} years old, and you were born on ${User.birthMonth}/${User.birthDay}/${User.birthYear}.`);
+        });
+
+        document.getElementById("console-error").addEventListener("click", () => {
+            console.error("Don't click that button again. Or else.");
+        });
+
+        document.getElementById("console-table").addEventListener("click", () => {
+            console.table([User]);
+        });
+
+        document.getElementById("console-dir").addEventListener("click", () => {
+            console.dir(User);
+        });
+    
+        document.getElementById("console-dirxml").addEventListener("click", () => {
+            console.dirxml(document.getElementById("result"));
+        });
+
+        document.getElementById("console-group-start").addEventListener("click", () => {
+            console.group("Console Group");
+        });
+
+        document.getElementById("console-group-end").addEventListener("click", () => {
+            console.groupEnd("Console Group");
+        });
+
+        document.getElementById("console-time-start").addEventListener("click", () => {
+            console.time("Console Timer");
+        });
+
+        document.getElementById("console-time-end").addEventListener("click", () => {
+            console.timeEnd("Console Timer");
+        });
+
+        document.getElementById("console-trace").addEventListener("click", () => {
+            console.trace(getBirthMonth("January"));
+        });
+
+        window.onerror = function(msg, url, linenumber) {
+            console.log('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+        }
+
+    </script>
+</body>
+</html>
